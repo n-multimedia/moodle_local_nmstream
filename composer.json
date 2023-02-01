@@ -1,0 +1,19 @@
+{
+    "name": "n-multimedia/nmstream",
+    "description": "Attach Stream to moodle activities",
+    "type": "moodle-local",
+    "keywords": ["moodle", "nmstream"],
+    "license": "GPLv3",
+    "version": "dev-master",
+    "authors": [
+        {
+            "name": "Sergej Naumenko"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "composer/installers": "~2.2"
+    }
+
+}
+

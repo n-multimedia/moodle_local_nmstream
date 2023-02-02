@@ -1,3 +1,466 @@
-  openapi:
-    paths:
-  info:
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: NMStream API
+  license:
+    name: GNU General Public License
+servers:
+  - url: http://localhost:9270/api/v3.0/
+paths:
+  /stream/{root}/initialize:
+    get:
+      summary: initialize stream
+      operationId: initialize
+      tags:
+        - stream
+      parameters:
+        - name: root
+          in: path
+          description: stream container id
+          required: true
+          schema:
+            type: integer
+            maximum: 100
+            format: int32
+      responses:
+        '200':
+          description: A paged array of nodes
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InitializationResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /stream/{root}/update/{offset}/{limit}/{token}:
+    get:
+      summary: get stream updates
+      operationId: getStreamUpdates
+      tags:
+        - stream
+      parameters:
+        - name: root
+          in: path
+          description: stream container id
+          required: true
+          schema:
+            type: integer
+            maximum: 100
+            format: int32
+        - name: offset
+          in: path
+          required: true
+          description: offset
+          schema:
+            type: integer
+        - name: limit
+          in: path
+          required: true
+          description: limit
+          schema:
+            type: integer
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paged array of nodes
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InitializationResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /stream/{root}/add/{token}:
+    post:
+      summary: create a node
+      operationId: createNode
+      tags:
+        - node
+      parameters:
+        - name: root
+          in: path
+          description: stream container id
+          required: true
+          schema:
+            type: integer
+            maximum: 100
+            format: int32
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /node/{node}/update/{token}:
+    post:
+      summary: update node
+      operationId: updateNode
+      tags:
+        - node
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: stream container id
+          schema:
+            type: string
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /node/{node}/delete/{token}:
+    post:
+      summary: delete node in stream
+      operationId: updateStream
+      tags:
+        - node
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: stream container id
+          schema:
+            type: string
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /node/{node}/file/upload/{token}:
+    post:
+      summary: upload file attachment in node
+      operationId: attachmentUpload
+      tags:
+        - node - attachment
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: node id
+          schema:
+            type: integer
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /node/{node}/file/{file}/delete/{token}:
+    post:
+      summary: delete file attachment in node
+      operationId: attachmentDelete
+      tags:
+        - node - attachment
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: node id
+          schema:
+            type: integer
+        - name: file
+          in: path
+          required: true
+          description: file attachment id
+          schema:
+            type: integer
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /node/{node}/poll/add_vote/{token}:
+    post:
+      summary: add vote to a poll
+      operationId: pollAddVote
+      tags:
+        - node - poll
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: node id
+          schema:
+            type: string
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /node/{node}/mention_members/get/{token}:
+    post:
+      summary: get mention members
+      operationId: getMentionMembers
+      tags:
+        - node - mention
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: node id
+          schema:
+            type: string
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /node/{node}/comment/add/{token}:
+    post:
+      summary: create a comment node
+      operationId: createComment
+      tags:
+        - comment
+      parameters:
+        - name: node
+          in: path
+          description: stream container id
+          required: true
+          schema:
+            type: integer
+            maximum: 100
+            format: int32
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comment/{node}/update/{token}:
+    post:
+      summary: update comment
+      operationId: updateComment
+      tags:
+        - comment
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: node id
+          schema:
+            type: string
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comment/{node}/delete/{token}:
+    post:
+      summary: delete comment in stream
+      operationId: deleteNode
+      tags:
+        - comment
+      parameters:
+        - name: node
+          in: path
+          required: true
+          description: node id
+          schema:
+            type: string
+        - name: token
+          in: path
+          required: true
+          description: CSRF token
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    InitializationResponse:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Nodes'
+        nodeCount:
+          type: integer
+        users:
+          type: array
+          items:
+            type: string
+        comments:
+          type: array
+          items:
+            type: string
+        loggedInUser:
+          type: integer
+        streamOptions:
+          type: array
+          items:
+            type: string
+        tag:
+          type: string
+    Node:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        sticky:
+          type: integer
+          format: int64
+        contextid:
+          type: integer
+          format: int64
+        courseid:
+          type: integer
+          format: int64
+        rootid:
+          type: integer
+          format: int64
+        body:
+          type: string
+        format:
+          type: string
+        uid:
+          type: integer
+          format: int64
+        privacy:
+          type: integer
+          format: int64
+        groupid:
+          type: integer
+          format: int64
+        created:
+          type: integer
+          format: int64
+        updated:
+          type: integer
+          format: int64
+    Nodes:
+      type: array
+      maxItems: 100
+      items:
+        $ref: "#/components/schemas/Node"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
